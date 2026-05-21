@@ -2,21 +2,32 @@ import { Component, OnInit } from '@angular/core'
 import { RadSideDrawer } from 'nativescript-ui-sidedrawer'
 import { Application } from '@nativescript/core'
 
+import { Store } from '@ngrx/store'
+import { Observable } from 'rxjs'
+
 @Component({
   selector: 'Home',
   templateUrl: './home.component.html',
 })
 export class HomeComponent implements OnInit {
-  constructor() {
-    // Use the component constructor to inject providers.
+
+  readings$: Observable<any[]>
+
+  constructor(
+    private store: Store<any>
+  ) {
+
+    this.readings$ = this.store.select('reading')
+
   }
 
-  ngOnInit(): void {
-    // Init your component properties here.
-  }
+  ngOnInit(): void {}
 
   onDrawerButtonTap(): void {
+
     const sideDrawer = <RadSideDrawer>Application.getRootView()
     sideDrawer.showDrawer()
+
   }
+
 }

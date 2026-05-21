@@ -4,6 +4,9 @@ import { Application, isAndroid } from '@nativescript/core'
 import { RouterExtensions } from '@nativescript/angular'
 import { action } from '@nativescript/core/ui/dialogs'
 import { Toasty } from '@triniwiz/nativescript-toasty'
+import { MovieService } from '../services/movie.service'
+import * as ApplicationSettings from '@nativescript/core/application-settings'
+
 
 @Component({
   selector: 'Search',
@@ -14,21 +17,12 @@ export class SearchComponent implements OnInit {
   searchText: string = ''
   showError: boolean = false
 
-  movies = [
-    {
-      id: 1,
-      name: 'Batman',
-      category: 'Acción',
-    },
-    {
-      id: 2,
-      name: 'Spiderman',
-      category: 'Aventura',
-    },
-  ]
+  movies: any[] = []
+  favorites: any[] = []
 
-  constructor(
-    private routerExtensions: RouterExtensions
+ constructor(
+  private routerExtensions: RouterExtensions,
+  private movieService: MovieService
   ) {}
 
   ngOnInit(): void {
@@ -115,4 +109,34 @@ export class SearchComponent implements OnInit {
 
   }
 
+  searchMovies(): void {
+
+  this.movieService
+    .searchMovies(this.searchText)
+    .subscribe((data: any) => {
+
+      this.movies = data
+
+    })
+
+  }
+
+addFavorite(movie: any): void {
+
+  if (!movie) {
+    return
+  }
+
+  this.favorites.push(movie)
+
+  ApplicationSettings.setString(
+    'favorites',
+    JSON.stringify(this.favorites)
+  )
+
+  new Toasty({
+    text: 'Agregado a favoritos',
+  }).show()
+
+  }
 }

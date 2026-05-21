@@ -1,13 +1,50 @@
 <ActionBar class="action-bar">
   <NavigationButton visibility="hidden"></NavigationButton>
-  <GridLayout columns="50, *">
-    <Label class="action-bar-title" text="Browse" colSpan="2"></Label>
 
-    <Label class="fas" text="&#xf0c9;" (tap)="onDrawerButtonTap()"></Label>
+  <GridLayout columns="50, *">
+
+    <Label
+      class="fas"
+      text="&#xf0c9;"
+      (tap)="onDrawerButtonTap()">
+    </Label>
+
+    <Label
+      class="action-bar-title"
+      text="Favoritos"
+      col="1">
+    </Label>
+
   </GridLayout>
 </ActionBar>
 
-<GridLayout class="page__content">
-  <Label class="page__content-icon far" text="&#xf1ea;"></Label>
-  <Label class="page__content-placeholder" text="<!-- Page content goes here -->"></Label>
-</GridLayout>
+<StackLayout padding="20">
+
+  <Label
+    text="Mis favoritos"
+    class="h1">
+  </Label>
+
+  <ListView [items]="favorites">
+
+    <ng-template let-item="item">
+
+      <StackLayout padding="10">
+
+        <Label
+          [text]="item.name"
+          class="h2">
+        </Label>
+
+        <Button
+          text="Leer ahora"
+          (tap)="readNow(item)">
+        </Button>
+
+      </StackLayout>
+
+    </ng-template>
+
+  </ListView>
+
+</StackLayout>

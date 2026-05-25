@@ -1,51 +1,104 @@
-import { Component, OnInit } from '@angular/core'
-import { NavigationEnd, Router } from '@angular/router'
-import { RouterExtensions } from '@nativescript/angular'
+import { Component } from '@angular/core';
+
 import {
-  DrawerTransitionBase,
+  RouterExtensions
+} from '@nativescript/angular';
+
+import {
   RadSideDrawer,
-  SlideInOnTopTransition,
-} from 'nativescript-ui-sidedrawer'
-import { filter } from 'rxjs/operators'
-import { Application } from '@nativescript/core'
+  SlideInOnTopTransition
+} from 'nativescript-ui-sidedrawer';
+
+import {
+  Application
+} from '@nativescript/core';
+
+import { firebase } from '@nativescript/firebase-core';
+
+import {
+  Messaging
+} from '@nativescript/firebase-messaging';
+
+import {
+  Toasty
+} from '@triniwiz/nativescript-toasty';
 
 @Component({
   selector: 'ns-app',
-  templateUrl: 'app.component.html',
+  templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit {
-  private _activatedUrl: string
-  private _sideDrawerTransition: DrawerTransitionBase
+export class AppComponent {
 
-  constructor(private router: Router, private routerExtensions: RouterExtensions) {
-    // Use the component constructor to inject services.
-  }
+  sideDrawerTransition =
+    new SlideInOnTopTransition();
 
-  ngOnInit(): void {
-    this._activatedUrl = '/home'
-    this._sideDrawerTransition = new SlideInOnTopTransition()
+  constructor(
+    private routerExtensions: RouterExtensions
+  ) {
 
-    this.router.events
-      .pipe(filter((event: any) => event instanceof NavigationEnd))
-      .subscribe((event: NavigationEnd) => (this._activatedUrl = event.urlAfterRedirects))
-  }
+    firebase()
+      .initializeApp()
+      .then(() => {
 
-  get sideDrawerTransition(): DrawerTransitionBase {
-    return this._sideDrawerTransition
-  }
+        console.log("Firebase inicializado");
 
-  isComponentSelected(url: string): boolean {
-    return this._activatedUrl === url
+        const messaging = new Messaging();
+
+        messaging.getToken()
+          .then((token: string) => {
+
+            console.log("TOKEN FIREBASE:");
+            console.log(token);
+
+          });
+        
+        console.log("Escuchando notificaciones...");
+
+        messaging.onMessage((message: any) => {
+
+          console.log("Notificación recibida:");
+          console.log(message);
+
+          new Toasty({
+            text:
+              (message.notification?.title || "Notificación") +
+              " - " +
+              (message.notification?.body || ""),
+          }).show();
+
+        });
+
+      })
+      .catch((e: any) => {
+
+        console.log("Error Firebase:", e);
+
+      });
+
   }
 
   onNavItemTap(navItemRoute: string): void {
-    this.routerExtensions.navigate([navItemRoute], {
-      transition: {
-        name: 'fade',
-      },
-    })
 
-    const sideDrawer = <RadSideDrawer>Application.getRootView()
-    sideDrawer.closeDrawer()
+    this.routerExtensions.navigate(
+      [navItemRoute],
+      {
+        clearHistory: true
+      }
+    );
+
+    const sideDrawer =
+      <RadSideDrawer>Application.getRootView();
+
+    sideDrawer.closeDrawer();
+
   }
+
+  isComponentSelected(
+    navItemRoute: string
+  ): boolean {
+
+    return false;
+
+  }
+
 }

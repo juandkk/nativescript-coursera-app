@@ -22,4 +22,6 @@ android {
   aaptOptions {
     additionalParameters "--no-version-vectors"
   }
+
+  apply plugin: 'com.google.gms.google-services'
 }

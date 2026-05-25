@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "536546428248",
+    "project_id": "courseraapp-2eb09",
+    "storage_bucket": "courseraapp-2eb09.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:536546428248:android:4bd132edc3a76e8e4c912d",
+        "android_client_info": {
+          "package_name": "org.nativescript.MyApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqq6aTlnTHprO-RYLYfARh2H3rbhl0j9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
